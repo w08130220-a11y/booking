@@ -51,6 +51,7 @@ model SlotOverride {
 
 model Booking {
   id            String   @id @default(cuid())
+  bookingNumber String   @unique @default("")  // BUBU01, BUBU02...
   date          DateTime
   startTime     String
   endTime       String

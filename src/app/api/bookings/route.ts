@@ -72,8 +72,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Send confirmation email (fire and forget)
-    sendBookingConfirmation({
+    // Send confirmation email (must await in serverless)
+    const emailSent = await sendBookingConfirmation({
       customerName: booking.customerName,
       customerEmail: booking.customerEmail,
       customerPhone: booking.customerPhone,
@@ -85,14 +85,14 @@ export async function POST(request: NextRequest) {
       totalPrice: booking.totalPrice,
       notes: booking.notes,
       bookingId: booking.id,
-    }).then((sent) => {
-      if (sent) {
-        prisma.booking.update({
-          where: { id: booking.id },
-          data: { emailSent: true },
-        }).catch(console.error);
-      }
     });
+
+    if (emailSent) {
+      await prisma.booking.update({
+        where: { id: booking.id },
+        data: { emailSent: true },
+      }).catch(console.error);
+    }
 
     return NextResponse.json({ id: booking.id }, { status: 201 });
   } catch (error: unknown) {
