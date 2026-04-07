@@ -21,28 +21,36 @@ interface BookingEmailData {
 }
 
 export async function sendBookingConfirmation(data: BookingEmailData) {
+  let customerSent = false;
+  let adminSent = false;
+
+  // 1. Send confirmation to customer
   try {
-    // 1. Send confirmation to customer
     await resend.emails.send({
       from: `${STUDIO_NAME} <${STUDIO_EMAIL}>`,
       to: data.customerEmail,
       subject: `預約確認 - ${STUDIO_NAME}`,
       html: buildConfirmationEmail(data),
     });
+    customerSent = true;
+  } catch (error) {
+    console.error("Failed to send customer email:", error);
+  }
 
-    // 2. Send notification to admin
+  // 2. Send notification to admin (independent of customer email)
+  try {
     await resend.emails.send({
       from: `${STUDIO_NAME} <${STUDIO_EMAIL}>`,
       to: ADMIN_NOTIFICATION_EMAIL,
       subject: `📋 新預約通知 — ${data.customerName}（${data.date}）`,
       html: buildAdminNotificationEmail(data),
     });
-
-    return true;
+    adminSent = true;
   } catch (error) {
-    console.error("Failed to send email:", error);
-    return false;
+    console.error("Failed to send admin email:", error);
   }
+
+  return customerSent || adminSent;
 }
 
 function buildConfirmationEmail(data: BookingEmailData) {

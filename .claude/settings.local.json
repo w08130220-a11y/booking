@@ -35,7 +35,9 @@
       "Bash(curl -s -H \"Authorization: Bearer re_dGVy2zEE_K4Lmbt3wFFGLoW9P1ziCrGmZ\" https://api.resend.com/domains)",
       "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(f\"\"{d[''''name'''']}: {d[''''status'''']}\"\"\\) for d in data.get\\(''''data'''',[]\\)]\")",
       "Bash(curl -s -X POST https://api.resend.com/emails -H \"Authorization: Bearer re_dGVy2zEE_K4Lmbt3wFFGLoW9P1ziCrGmZ\" -H \"Content-Type: application/json\" -d '{\"\"from\"\":\"\"Bubu Studio <booking@bubububu.co>\"\",\"\"to\"\":\"\"bubu2026studio@gmail.com\"\",\"\"subject\"\":\"\"測試信件\"\",\"\"html\"\":\"\"<p>這是一封測試信件</p>\"\"}')",
-      "Bash(curl -s -X POST https://api.resend.com/emails -H \"Authorization: Bearer re_dGVy2zEE_K4Lmbt3wFFGLoW9P1ziCrGmZ\" -H \"Content-Type: application/json\" -d \"{\"\"from\"\":\"\"Bubu Studio <booking@bubububu.co>\"\",\"\"to\"\":\"\"combo813926@gmail.com\"\",\"\"subject\"\":\"\"Bubu Studio test\"\",\"\"html\"\":\"\"<p>test email</p>\"\"}\")"
+      "Bash(curl -s -X POST https://api.resend.com/emails -H \"Authorization: Bearer re_dGVy2zEE_K4Lmbt3wFFGLoW9P1ziCrGmZ\" -H \"Content-Type: application/json\" -d \"{\"\"from\"\":\"\"Bubu Studio <booking@bubububu.co>\"\",\"\"to\"\":\"\"combo813926@gmail.com\"\",\"\"subject\"\":\"\"Bubu Studio test\"\",\"\"html\"\":\"\"<p>test email</p>\"\"}\")",
+      "Bash(curl -s https://bubububu.co/api/slots?date=2026-04-10)",
+      "Bash(curl -s -X POST https://bubububu.co/api/bookings -H \"Content-Type: application/json\" -d \"{\"\"date\"\":\"\"2026-04-10\"\",\"\"startTime\"\":\"\"20:00\"\",\"\"endTime\"\":\"\"22:00\"\",\"\"shootType\"\":\"\"static\"\",\"\"customerName\"\":\"\"Test\"\",\"\"customerEmail\"\":\"\"w08130220@gmail.com\"\",\"\"customerPhone\"\":\"\"0912345678\"\",\"\"numberOfPeople\"\":1}\")"
     ]
   }
 }
