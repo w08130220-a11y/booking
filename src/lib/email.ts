@@ -26,22 +26,24 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
 
   // 1. Send confirmation to customer
   try {
-    await resend.emails.send({
+    console.log("Sending customer email to:", data.customerEmail, "from:", `${STUDIO_NAME} <${STUDIO_EMAIL}>`);
+    const result = await resend.emails.send({
       from: `${STUDIO_NAME} <${STUDIO_EMAIL}>`,
-      to: data.customerEmail,
+      to: [data.customerEmail],
       subject: `預約確認 - ${STUDIO_NAME}`,
       html: buildConfirmationEmail(data),
     });
+    console.log("Customer email result:", JSON.stringify(result));
     customerSent = true;
   } catch (error) {
-    console.error("Failed to send customer email:", error);
+    console.error("Failed to send customer email:", JSON.stringify(error));
   }
 
   // 2. Send notification to admin (independent of customer email)
   try {
     await resend.emails.send({
       from: `${STUDIO_NAME} <${STUDIO_EMAIL}>`,
-      to: ADMIN_NOTIFICATION_EMAIL,
+      to: [ADMIN_NOTIFICATION_EMAIL],
       subject: `📋 新預約通知 — ${data.customerName}（${data.date}）`,
       html: buildAdminNotificationEmail(data),
     });
