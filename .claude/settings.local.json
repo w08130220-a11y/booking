@@ -19,7 +19,10 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(find /c/Users/combo/photcheck -type f -name prisma.config.* -o -name .env.example -o -name .env.production)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(npx vercel:*)",
+      "Bash(prisma/migrations/migration_lock.toml:*)",
+      "Bash(prisma/migrations/0001_init/migration.sql:*)"
     ]
   }
 }
