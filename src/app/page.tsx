@@ -78,6 +78,7 @@ export default function HomePage() {
               <span className={`text-base font-semibold ${shootType === "static" ? "text-blue-700" : "text-zinc-900"}`}>
                 平面拍攝
               </span>
+              <span className="text-xs text-zinc-400 mt-1">手機皆算平面</span>
               <span className={`text-xl font-bold mt-2 ${shootType === "static" ? "text-blue-600" : "text-zinc-700"}`}>
                 NT$ {prices.static.toLocaleString()}
               </span>
@@ -103,6 +104,7 @@ export default function HomePage() {
               <span className={`text-base font-semibold ${shootType === "dynamic" ? "text-blue-700" : "text-zinc-900"}`}>
                 動態拍攝
               </span>
+              <span className="text-xs text-zinc-400 mt-1">五人以上劇組</span>
               <span className={`text-xl font-bold mt-2 ${shootType === "dynamic" ? "text-blue-600" : "text-zinc-700"}`}>
                 NT$ {prices.dynamic.toLocaleString()}
               </span>
