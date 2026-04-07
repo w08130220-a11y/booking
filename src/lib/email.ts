@@ -124,10 +124,13 @@ function buildConfirmationEmail(data: BookingEmailData) {
 
       <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin-bottom:24px;">
         <p style="color:#92400e;font-size:13px;margin:0;font-weight:600;margin-bottom:8px;">注意事項</p>
-        <ul style="color:#92400e;font-size:13px;margin:0;padding-left:18px;line-height:1.8;">
-          <li>請於預約時段前 10 分鐘抵達現場</li>
-          <li>如需取消或更改預約，請於 <strong>24 小時前</strong>提前通知我們</li>
-          <li>未提前通知而缺席者，可能影響後續預約權益</li>
+        <ul style="color:#92400e;font-size:13px;margin:0;padding-left:18px;line-height:2;">
+          <li>攝影棚地址為桃園市八德區，確認租借後會提供詳細地址，並給予一次性大門密碼（請私訊 IG 給予）</li>
+          <li>可於預約時段前 10 分鐘抵達現場</li>
+          <li>時段後若有其他人預約，則不可超時</li>
+          <li>如遇空場想延長租借，超時 15 分鐘以半小時收費</li>
+          <li>如需取消或更改預約，請於<strong>三天前</strong>告知</li>
+          <li>如當天取消則時段仍然為您保留使用權，不退款</li>
         </ul>
       </div>
 
