@@ -1,10 +1,28 @@
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
+const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
 const STUDIO_NAME = process.env.STUDIO_NAME || "Bubu Studio";
 const STUDIO_EMAIL = process.env.STUDIO_EMAIL || "onboarding@resend.dev";
 const ADMIN_NOTIFICATION_EMAIL = "yangiofficial3@gmail.com";
+
+async function sendEmail(to: string, subject: string, html: string) {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: `${STUDIO_NAME} <${STUDIO_EMAIL}>`,
+      to: [to],
+      subject,
+      html,
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(`Resend API error: ${JSON.stringify(data)}`);
+  }
+  return data;
+}
 
 interface BookingEmailData {
   customerName: string;
@@ -26,38 +44,22 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
 
   // 1. Send confirmation to customer
   try {
-    let html: string;
-    try {
-      html = buildConfirmationEmail(data);
-    } catch (buildError) {
-      console.error("TEMPLATE BUILD ERROR:", buildError);
-      html = `<p>${data.customerName} 您好，您的預約已確認。日期：${data.date}，時段：${data.startTime}-${data.endTime}</p>`;
-    }
-    console.log("Sending customer email, HTML length:", html.length);
-    const result = await resend.emails.send({
-      from: `${STUDIO_NAME} <${STUDIO_EMAIL}>`,
-      to: [data.customerEmail],
-      subject: `預約確認 - ${STUDIO_NAME}`,
-      html: html,
-    });
-    console.log("Customer email sent:", JSON.stringify(result));
+    const html = buildConfirmationEmail(data);
+    console.log("Sending customer email to:", data.customerEmail, "length:", html.length);
+    const result = await sendEmail(data.customerEmail, `預約確認 - ${STUDIO_NAME}`, html);
+    console.log("Customer email OK:", JSON.stringify(result));
     customerSent = true;
   } catch (error: unknown) {
-    const errMsg = error instanceof Error ? error.message : JSON.stringify(error);
-    console.error("CUSTOMER EMAIL ERROR:", errMsg);
+    console.error("CUSTOMER EMAIL FAILED:", error instanceof Error ? error.message : String(error));
   }
 
-  // 2. Send notification to admin (independent of customer email)
+  // 2. Send notification to admin
   try {
-    await resend.emails.send({
-      from: `${STUDIO_NAME} <${STUDIO_EMAIL}>`,
-      to: [ADMIN_NOTIFICATION_EMAIL],
-      subject: `📋 新預約通知 — ${data.customerName}（${data.date}）`,
-      html: buildAdminNotificationEmail(data),
-    });
+    const adminHtml = buildAdminNotificationEmail(data);
+    await sendEmail(ADMIN_NOTIFICATION_EMAIL, `新預約通知 - ${data.customerName} ${data.date}`, adminHtml);
     adminSent = true;
-  } catch (error) {
-    console.error("Failed to send admin email:", error);
+  } catch (error: unknown) {
+    console.error("ADMIN EMAIL FAILED:", error instanceof Error ? error.message : String(error));
   }
 
   return customerSent || adminSent;
