@@ -11,6 +11,7 @@ interface Slot {
   startTime: string;
   endTime: string;
   booked?: boolean;
+  passed?: boolean;
 }
 
 const MIN_SLOTS = 2;
@@ -54,7 +55,7 @@ function BookSlotsContent() {
   const date = parseDate(dateStr);
 
   function toggleSlot(slot: Slot) {
-    if (slot.booked) return;
+    if (slot.booked || slot.passed) return;
     setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(slot.startTime)) {
@@ -142,13 +143,15 @@ function BookSlotsContent() {
               {slots.map((slot) => {
                 const isSelected = selected.has(slot.startTime);
                 const isBooked = slot.booked;
+                const isPassed = slot.passed;
+                const isDisabled = isBooked || isPassed;
                 return (
                   <button
                     key={slot.startTime}
                     onClick={() => toggleSlot(slot)}
-                    disabled={isBooked}
+                    disabled={isDisabled}
                     className={`flex flex-col items-center justify-center py-3.5 px-3 rounded-lg border transition-colors ${
-                      isBooked
+                      isDisabled
                         ? "border-zinc-100 bg-zinc-50 cursor-not-allowed"
                         : isSelected
                         ? "border-blue-600 bg-blue-600 text-white cursor-pointer"
@@ -156,14 +159,14 @@ function BookSlotsContent() {
                     }`}
                   >
                     <span className={`text-base font-medium ${
-                      isBooked ? "text-zinc-300" : isSelected ? "text-white" : "text-zinc-900"
+                      isDisabled ? "text-zinc-300" : isSelected ? "text-white" : "text-zinc-900"
                     }`}>
                       {slot.startTime}
                     </span>
                     <span className={`text-xs mt-0.5 ${
-                      isBooked ? "text-zinc-300" : isSelected ? "text-blue-200" : "text-zinc-400"
+                      isDisabled ? "text-zinc-300" : isSelected ? "text-blue-200" : "text-zinc-400"
                     }`}>
-                      {isBooked ? "已預約" : `~ ${slot.endTime}`}
+                      {isBooked ? "已預約" : isPassed ? "已過時" : `~ ${slot.endTime}`}
                     </span>
                   </button>
                 );

@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// 取得台北時間
+function getTaipeiNow() {
+  return new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Taipei" }));
+}
+
 export async function GET(request: NextRequest) {
   const dateStr = request.nextUrl.searchParams.get("date");
   if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
@@ -67,9 +72,17 @@ export async function GET(request: NextRequest) {
     select: { startTime: true, endTime: true },
   });
 
+  // 判斷是否為今天（台北時間）
+  const now = getTaipeiNow();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const isToday = dateStr === todayStr;
+  const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
   const slotsWithStatus = availableSlots.map((slot) => {
     const booked = bookings.some((b) => b.startTime < slot.endTime && b.endTime > slot.startTime);
-    return { ...slot, booked };
+    // 今天已過的時段標記為 passed
+    const passed = isToday && slot.startTime <= currentTime;
+    return { ...slot, booked, passed };
   });
 
   return NextResponse.json({ slots: slotsWithStatus });
