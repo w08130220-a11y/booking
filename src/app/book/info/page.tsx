@@ -127,7 +127,7 @@ function BookInfoContent() {
                 </span>
                 {pricePerHour > 0 && hours && (
                   <span className="text-sm font-medium text-emerald-600">
-                    NT$ {(parseInt(hours) * pricePerHour).toLocaleString()}（現場付款）
+                    NT$ {(parseInt(hours) * pricePerHour).toLocaleString()}（預約後匯款）
                   </span>
                 )}
               </div>
