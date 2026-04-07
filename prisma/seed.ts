@@ -1,13 +1,8 @@
-import "dotenv/config";
-// @ts-ignore - excluded from tsconfig for build
-import { neon } from "@neondatabase/serverless";
-// @ts-ignore
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "../src/generated/prisma/client.js";
 import bcrypt from "bcryptjs";
 
-const sql = neon(process.env.DATABASE_URL!);
-const adapter = new PrismaNeon(sql);
+const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter } as any);
 
 async function main() {

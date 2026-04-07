@@ -22,7 +22,10 @@
       "Bash(npm uninstall:*)",
       "Bash(npx vercel:*)",
       "Bash(prisma/migrations/migration_lock.toml:*)",
-      "Bash(prisma/migrations/0001_init/migration.sql:*)"
+      "Bash(prisma/migrations/0001_init/migration.sql:*)",
+      "Bash(source .env.production)",
+      "Bash(node --import tsx prisma/seed.ts)",
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_eQfb4HVN2FrE@ep-odd-shape-anioyuwe-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require\" ADMIN_USERNAME=admin ADMIN_PASSWORD=admin123 node --import tsx prisma/seed.ts)"
     ]
   }
 }
