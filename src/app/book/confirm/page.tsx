@@ -177,7 +177,7 @@ function BookConfirmContent() {
 
           <div className="mt-4 bg-amber-100 rounded-lg p-3">
             <p className="text-sm text-amber-800">
-              如有任何問題，請來信：<a href="mailto:bubu2026studio@gmail.com" className="font-medium underline">bubu2026studio@gmail.com</a>
+              如有任何問題，請來信：<a href="mailto:yangiofficial3@gmail.com" className="font-medium underline">yangiofficial3@gmail.com</a>
             </p>
           </div>
         </div>
