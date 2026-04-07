@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model WeeklySchedule {
+  id        String   @id @default(cuid())
+  dayOfWeek Int      // 0=Sun, 1=Mon, ..., 6=Sat
+  startTime String   // "09:00"
+  endTime   String   // "10:00"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([dayOfWeek, startTime])
+}
+
+model Holiday {
+  id          String   @id @default(cuid())
+  date        DateTime
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([date])
+}
+
+model SlotOverride {
+  id        String   @id @default(cuid())
+  date      DateTime
+  startTime String
+  endTime   String
+  isActive  Boolean  @default(true) // true=add slot, false=remove slot
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([date, startTime])
+}
+
+model Booking {
+  id            String   @id @default(cuid())
+  date          DateTime
+  startTime     String
+  endTime       String
+  customerName  String
+  customerEmail String
+  customerPhone String
+  numberOfPeople Int     @default(1)
+  notes         String?
+  status        String   @default("confirmed") // confirmed, cancelled, completed, no_show
+  cancellationReason String?
+  emailSent     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([date])
+  @@index([status])
+  @@index([customerEmail])
+}
