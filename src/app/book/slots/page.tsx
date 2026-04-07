@@ -147,35 +147,49 @@ function BookSlotsContent() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {slots.map((slot) => {
                 const isSelected = selected.has(slot.startTime);
                 const isBooked = slot.booked;
                 const isPassed = slot.passed;
                 const isDisabled = isBooked || isPassed;
+                const statusText = isBooked ? "已預約" : isPassed ? "已過時" : "可選取";
                 return (
                   <button
                     key={slot.startTime}
                     onClick={() => toggleSlot(slot)}
                     disabled={isDisabled}
-                    className={`flex flex-col items-center justify-center py-3.5 px-3 rounded-lg border transition-colors ${
+                    className={`flex flex-col rounded-xl border-2 overflow-hidden transition-colors ${
                       isDisabled
-                        ? "border-zinc-100 bg-zinc-50 cursor-not-allowed"
+                        ? "border-zinc-100 bg-zinc-50/50 cursor-not-allowed"
                         : isSelected
-                        ? "border-blue-600 bg-blue-600 text-white cursor-pointer"
-                        : "border-zinc-200 hover:border-blue-400 hover:bg-blue-50 cursor-pointer"
+                        ? "border-blue-600 bg-blue-50 cursor-pointer"
+                        : "border-zinc-200 bg-white hover:border-blue-400 cursor-pointer"
                     }`}
                   >
-                    <span className={`text-base font-medium ${
-                      isDisabled ? "text-zinc-300" : isSelected ? "text-white" : "text-zinc-900"
+                    {/* Top: time + status */}
+                    <div className="flex items-center justify-between px-4 pt-3 pb-1">
+                      <span className={`text-xl font-bold tracking-tight ${
+                        isDisabled ? "text-zinc-300" : isSelected ? "text-blue-700" : "text-zinc-900"
+                      }`}>
+                        {slot.startTime}
+                      </span>
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                        isDisabled
+                          ? "bg-zinc-100 text-zinc-400"
+                          : isSelected
+                          ? "bg-blue-600 text-white"
+                          : "bg-zinc-100 text-zinc-500"
+                      }`}>
+                        {isSelected ? "已選取" : statusText}
+                      </span>
+                    </div>
+                    {/* Bottom: time range */}
+                    <div className={`px-4 pb-3 text-sm ${
+                      isDisabled ? "text-zinc-300" : isSelected ? "text-blue-500" : "text-zinc-400"
                     }`}>
-                      {slot.startTime}
-                    </span>
-                    <span className={`text-xs mt-0.5 ${
-                      isDisabled ? "text-zinc-300" : isSelected ? "text-blue-200" : "text-zinc-400"
-                    }`}>
-                      {isBooked ? "已預約" : isPassed ? "已過時" : `~ ${slot.endTime}`}
-                    </span>
+                      {slot.startTime} - {slot.endTime}
+                    </div>
                   </button>
                 );
               })}
