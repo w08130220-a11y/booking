@@ -43,14 +43,17 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
   let adminSent = false;
 
   // 1. Send confirmation to customer
+  const customerEmail = String(data.customerEmail).trim();
+  console.log("CUSTOMER_EMAIL_RAW:", JSON.stringify(data.customerEmail), "TRIMMED:", JSON.stringify(customerEmail));
   try {
-    const html = buildConfirmationEmail(data);
-    console.log("Sending customer email to:", data.customerEmail, "length:", html.length);
-    const result = await sendEmail(data.customerEmail, `預約確認 - ${STUDIO_NAME}`, html);
-    console.log("Customer email OK:", JSON.stringify(result));
+    const confirmHtml = buildConfirmationEmail(data);
+    console.log("Template built OK, length:", confirmHtml.length);
+    const result = await sendEmail(customerEmail, "預約確認 - " + STUDIO_NAME, confirmHtml);
     customerSent = true;
+    console.log("Customer email SENT:", JSON.stringify(result));
   } catch (error: unknown) {
-    console.error("CUSTOMER EMAIL FAILED:", error instanceof Error ? error.message : String(error));
+    const msg = error instanceof Error ? error.message + " " + error.stack : String(error);
+    console.error("CUSTOMER_EMAIL_FAIL:", msg);
   }
 
   // 2. Send notification to admin
