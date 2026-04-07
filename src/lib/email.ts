@@ -1,6 +1,6 @@
 const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
-const STUDIO_NAME = process.env.STUDIO_NAME || "Bubu Studio";
-const STUDIO_EMAIL = process.env.STUDIO_EMAIL || "onboarding@resend.dev";
+const STUDIO_NAME = (process.env.STUDIO_NAME || "Bubu Studio").replace(/[\r\n]/g, "").trim();
+const STUDIO_EMAIL = (process.env.STUDIO_EMAIL || "onboarding@resend.dev").replace(/[\r\n]/g, "").trim();
 const ADMIN_NOTIFICATION_EMAIL = "yangiofficial3@gmail.com";
 
 async function sendEmail(to: string, subject: string, html: string) {
