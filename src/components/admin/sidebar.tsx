@@ -53,7 +53,7 @@ export function AdminSidebar({ username }: { username: string }) {
         )}
       >
         <div className="p-5 border-b border-zinc-200">
-          <h2 className="font-bold text-zinc-900">PhotoCheck Studio</h2>
+          <h2 className="font-bold text-zinc-900">Bubu Studio</h2>
           <p className="text-xs text-zinc-500 mt-0.5">管理後台</p>
         </div>
 

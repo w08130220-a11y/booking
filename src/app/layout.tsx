@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PhotoCheck Studio - 場地預約",
+  title: "Bubu Studio - 場地預約",
   description: "PhotoCheck 攝影棚場地租借預約系統",
 };
 
