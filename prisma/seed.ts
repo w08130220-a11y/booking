@@ -1,8 +1,14 @@
 import "dotenv/config";
+// @ts-ignore - excluded from tsconfig for build
+import { neon } from "@neondatabase/serverless";
+// @ts-ignore
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "../src/generated/prisma/client.js";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
+const sql = neon(process.env.DATABASE_URL!);
+const adapter = new PrismaNeon(sql);
+const prisma = new PrismaClient({ adapter } as any);
 
 async function main() {
   const username = process.env.ADMIN_USERNAME || "admin";
@@ -16,21 +22,14 @@ async function main() {
   });
   console.log(`Admin user created: ${username}`);
 
-  // Clear existing schedule
   await prisma.weeklySchedule.deleteMany();
 
-  // 24HR every day (Sun-Sat), 1-hour slots
   for (let day = 0; day <= 6; day++) {
     for (let hour = 0; hour < 24; hour++) {
       const startTime = `${String(hour).padStart(2, "0")}:00`;
       const endTime = `${String((hour + 1) % 24).padStart(2, "0")}:00`;
       await prisma.weeklySchedule.create({
-        data: {
-          dayOfWeek: day,
-          startTime,
-          endTime,
-          isActive: true,
-        },
+        data: { dayOfWeek: day, startTime, endTime, isActive: true },
       });
     }
   }
@@ -38,10 +37,5 @@ async function main() {
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .catch((e) => { console.error(e); process.exit(1); })
+  .finally(async () => { await prisma.$disconnect(); });
