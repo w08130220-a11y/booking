@@ -28,7 +28,9 @@
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_eQfb4HVN2FrE@ep-odd-shape-anioyuwe-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require\" ADMIN_USERNAME=admin ADMIN_PASSWORD=admin123 node --import tsx prisma/seed.ts)",
       "Bash(prisma/migrations/0002_add_price_payment/migration.sql:*)",
       "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_eQfb4HVN2FrE@ep-odd-shape-anioyuwe-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma migrate deploy)",
-      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_eQfb4HVN2FrE@ep-odd-shape-anioyuwe.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma migrate deploy)"
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_eQfb4HVN2FrE@ep-odd-shape-anioyuwe.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require\" npx prisma migrate deploy)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{redirect_url}\" https://bubububu.co)",
+      "Bash(nslookup bubububu.co 8.8.8.8)"
     ]
   }
 }
