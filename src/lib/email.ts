@@ -26,17 +26,25 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
 
   // 1. Send confirmation to customer
   try {
-    console.log("Sending customer email to:", data.customerEmail, "from:", `${STUDIO_NAME} <${STUDIO_EMAIL}>`);
+    let html: string;
+    try {
+      html = buildConfirmationEmail(data);
+    } catch (buildError) {
+      console.error("TEMPLATE BUILD ERROR:", buildError);
+      html = `<p>${data.customerName} 您好，您的預約已確認。日期：${data.date}，時段：${data.startTime}-${data.endTime}</p>`;
+    }
+    console.log("Sending customer email, HTML length:", html.length);
     const result = await resend.emails.send({
       from: `${STUDIO_NAME} <${STUDIO_EMAIL}>`,
       to: [data.customerEmail],
       subject: `預約確認 - ${STUDIO_NAME}`,
-      html: buildConfirmationEmail(data),
+      html: html,
     });
-    console.log("Customer email result:", JSON.stringify(result));
+    console.log("Customer email sent:", JSON.stringify(result));
     customerSent = true;
-  } catch (error) {
-    console.error("Failed to send customer email:", JSON.stringify(error));
+  } catch (error: unknown) {
+    const errMsg = error instanceof Error ? error.message : JSON.stringify(error);
+    console.error("CUSTOMER EMAIL ERROR:", errMsg);
   }
 
   // 2. Send notification to admin (independent of customer email)
