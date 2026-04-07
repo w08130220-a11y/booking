@@ -25,11 +25,16 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await request.json();
-  const { status, cancellationReason } = body;
+  const { status, cancellationReason, paymentStatus } = body;
 
   const validStatuses = ["confirmed", "cancelled", "completed", "no_show"];
   if (status && !validStatuses.includes(status)) {
     return NextResponse.json({ error: "無效的狀態" }, { status: 400 });
+  }
+
+  const validPayments = ["pending", "paid", "refunded"];
+  if (paymentStatus && !validPayments.includes(paymentStatus)) {
+    return NextResponse.json({ error: "無效的付款狀態" }, { status: 400 });
   }
 
   const booking = await prisma.booking.update({
@@ -37,6 +42,7 @@ export async function PATCH(
     data: {
       ...(status && { status }),
       ...(cancellationReason && { cancellationReason }),
+      ...(paymentStatus && { paymentStatus }),
     },
   });
 

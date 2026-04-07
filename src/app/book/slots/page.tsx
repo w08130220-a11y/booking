@@ -33,6 +33,14 @@ function BookSlotsContent() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [holiday, setHoliday] = useState<string | null>(null);
+  const [pricePerHour, setPricePerHour] = useState(0);
+
+  useEffect(() => {
+    fetch("/api/admin/settings/public")
+      .then((r) => r.json())
+      .then((data) => setPricePerHour(data.pricePerHour || 0))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!dateStr) return;
@@ -191,6 +199,11 @@ function BookSlotsContent() {
                       <span className="text-zinc-400 ml-1.5">
                         ({range.startTime} - {range.endTime})
                       </span>
+                      {pricePerHour > 0 && (
+                        <span className="text-emerald-600 font-medium ml-2">
+                          NT$ {(selected.size * pricePerHour).toLocaleString()}
+                        </span>
+                      )}
                     </p>
                   )}
                   {selected.size === 0 ? (

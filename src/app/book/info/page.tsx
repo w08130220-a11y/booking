@@ -29,6 +29,14 @@ function BookInfoContent() {
     numberOfPeople: 1,
     notes: "",
   });
+  const [pricePerHour, setPricePerHour] = useState(0);
+
+  useState(() => {
+    fetch("/api/admin/settings/public")
+      .then((r) => r.json())
+      .then((data) => setPricePerHour(data.pricePerHour || 0))
+      .catch(() => {});
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -107,6 +115,11 @@ function BookInfoContent() {
                 {formatTimeRange(startTime, endTime)}
                 {hours && <span className="ml-2 text-zinc-400">（共 {hours} 小時）</span>}
               </p>
+              {pricePerHour > 0 && hours && (
+                <p className="text-sm font-medium text-emerald-600 mt-0.5">
+                  費用：NT$ {(parseInt(hours) * pricePerHour).toLocaleString()}（現場付款）
+                </p>
+              )}
             </div>
             <Link
               href={`/book/slots?date=${dateStr}`}

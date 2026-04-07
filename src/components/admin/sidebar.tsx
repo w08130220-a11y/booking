@@ -8,8 +8,10 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/admin", label: "儀表板", icon: "📊" },
   { href: "/admin/bookings", label: "預約管理", icon: "📋" },
+  { href: "/admin/revenue", label: "營收報表", icon: "💰" },
   { href: "/admin/schedule", label: "時段設定", icon: "⏰" },
   { href: "/admin/holidays", label: "休假日", icon: "📅" },
+  { href: "/admin/settings", label: "價格設定", icon: "⚙️" },
 ];
 
 export function AdminSidebar({ username }: { username: string }) {

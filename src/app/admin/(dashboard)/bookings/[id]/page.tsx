@@ -18,6 +18,8 @@ interface Booking {
   status: string;
   cancellationReason: string | null;
   emailSent: boolean;
+  totalPrice: number;
+  paymentStatus: string;
   createdAt: string;
 }
 
@@ -26,6 +28,12 @@ const statusLabels: Record<string, { label: string; class: string }> = {
   completed: { label: "已完成", class: "bg-green-50 text-green-700" },
   cancelled: { label: "已取消", class: "bg-red-50 text-red-700" },
   no_show: { label: "未到", class: "bg-orange-50 text-orange-700" },
+};
+
+const paymentLabels: Record<string, { label: string; class: string }> = {
+  pending: { label: "待收款", class: "bg-yellow-50 text-yellow-700" },
+  paid: { label: "已收款", class: "bg-green-50 text-green-700" },
+  refunded: { label: "已退款", class: "bg-red-50 text-red-700" },
 };
 
 export default function BookingDetailPage() {
@@ -44,6 +52,23 @@ export default function BookingDetailPage() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [id]);
+
+  async function updatePayment(paymentStatus: string) {
+    setUpdating(true);
+    try {
+      const res = await fetch(`/api/bookings/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentStatus }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setBooking(data);
+      }
+    } finally {
+      setUpdating(false);
+    }
+  }
 
   async function updateStatus(status: string) {
     if (status === "cancelled" && !confirm("確定要取消此預約嗎？")) return;
@@ -139,6 +164,54 @@ export default function BookingDetailPage() {
               <dd className="text-sm">{booking.emailSent ? "✓ 已寄送" : "✗ 未寄送"}</dd>
             </div>
           </dl>
+        </div>
+
+        {/* Payment info */}
+        <div className="bg-white border border-zinc-200 rounded-xl p-5">
+          <h3 className="font-semibold text-zinc-900 mb-4">收款資訊</h3>
+          <dl className="space-y-3">
+            <div className="flex justify-between">
+              <dt className="text-sm text-zinc-500">金額</dt>
+              <dd className="text-lg font-bold text-zinc-900">NT$ {booking.totalPrice.toLocaleString()}</dd>
+            </div>
+            <div className="flex justify-between items-center">
+              <dt className="text-sm text-zinc-500">收款狀態</dt>
+              <dd>
+                <span className={`text-xs px-2.5 py-1 rounded-full ${(paymentLabels[booking.paymentStatus] || { class: "bg-zinc-100 text-zinc-700" }).class}`}>
+                  {(paymentLabels[booking.paymentStatus] || { label: booking.paymentStatus }).label}
+                </span>
+              </dd>
+            </div>
+          </dl>
+          <div className="mt-4 pt-4 border-t border-zinc-100 flex flex-wrap gap-2">
+            {booking.paymentStatus !== "paid" && (
+              <button
+                onClick={() => updatePayment("paid")}
+                disabled={updating}
+                className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm hover:bg-emerald-700 disabled:opacity-50"
+              >
+                標記已收款
+              </button>
+            )}
+            {booking.paymentStatus === "paid" && (
+              <button
+                onClick={() => updatePayment("refunded")}
+                disabled={updating}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600 disabled:opacity-50"
+              >
+                標記已退款
+              </button>
+            )}
+            {booking.paymentStatus !== "pending" && (
+              <button
+                onClick={() => updatePayment("pending")}
+                disabled={updating}
+                className="px-4 py-2 border border-zinc-300 text-zinc-600 rounded-lg text-sm hover:bg-zinc-50 disabled:opacity-50"
+              >
+                重設為待收款
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Customer info */}

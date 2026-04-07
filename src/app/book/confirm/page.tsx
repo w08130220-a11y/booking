@@ -15,6 +15,7 @@ interface BookingData {
   customerEmail: string;
   customerPhone: string;
   numberOfPeople: number;
+  totalPrice: number;
   notes: string | null;
 }
 
@@ -121,6 +122,18 @@ function BookConfirmContent() {
               <span className="text-sm text-zinc-500">人數</span>
               <span className="text-sm text-zinc-900">{booking.numberOfPeople} 人</span>
             </div>
+            {booking.totalPrice > 0 && (
+              <div className="flex justify-between">
+                <span className="text-sm text-zinc-500">費用</span>
+                <span className="text-sm font-medium text-emerald-600">NT$ {booking.totalPrice.toLocaleString()}</span>
+              </div>
+            )}
+            {booking.totalPrice > 0 && (
+              <div className="flex justify-between">
+                <span className="text-sm text-zinc-500">付款方式</span>
+                <span className="text-sm text-zinc-900">現場付款</span>
+              </div>
+            )}
             {booking.notes && (
               <div className="flex justify-between">
                 <span className="text-sm text-zinc-500">備註</span>

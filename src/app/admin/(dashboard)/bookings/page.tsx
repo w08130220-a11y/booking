@@ -13,6 +13,8 @@ interface Booking {
   customerEmail: string;
   customerPhone: string;
   numberOfPeople: number;
+  totalPrice: number;
+  paymentStatus: string;
   status: string;
   createdAt: string;
 }
@@ -119,7 +121,8 @@ export default function AdminBookingsPage() {
                     <th className="px-5 py-3 font-medium">時段</th>
                     <th className="px-5 py-3 font-medium">姓名</th>
                     <th className="px-5 py-3 font-medium">手機</th>
-                    <th className="px-5 py-3 font-medium">人數</th>
+                    <th className="px-5 py-3 font-medium">金額</th>
+                    <th className="px-5 py-3 font-medium">收款</th>
                     <th className="px-5 py-3 font-medium">狀態</th>
                   </tr>
                 </thead>
@@ -138,7 +141,16 @@ export default function AdminBookingsPage() {
                         </td>
                         <td className="px-5 py-3.5 text-sm text-zinc-900 font-medium">{b.customerName}</td>
                         <td className="px-5 py-3.5 text-sm text-zinc-600">{b.customerPhone}</td>
-                        <td className="px-5 py-3.5 text-sm text-zinc-600">{b.numberOfPeople}</td>
+                        <td className="px-5 py-3.5 text-sm text-zinc-700 font-medium">NT${b.totalPrice.toLocaleString()}</td>
+                        <td className="px-5 py-3.5">
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            b.paymentStatus === "paid" ? "bg-green-50 text-green-700" :
+                            b.paymentStatus === "refunded" ? "bg-red-50 text-red-700" :
+                            "bg-yellow-50 text-yellow-700"
+                          }`}>
+                            {b.paymentStatus === "paid" ? "已收" : b.paymentStatus === "refunded" ? "退款" : "待收"}
+                          </span>
+                        </td>
                         <td className="px-5 py-3.5">
                           <span className={`text-xs px-2 py-1 rounded-full ${s.class}`}>{s.label}</span>
                         </td>
