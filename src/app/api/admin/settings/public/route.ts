@@ -5,8 +5,11 @@ export async function GET() {
   let settings = await prisma.studioSettings.findUnique({ where: { id: "default" } });
   if (!settings) {
     settings = await prisma.studioSettings.create({
-      data: { id: "default", pricePerHour: 500 },
+      data: { id: "default", pricePerHourStatic: 1500, pricePerHourDynamic: 2500 },
     });
   }
-  return NextResponse.json({ pricePerHour: settings.pricePerHour });
+  return NextResponse.json({
+    pricePerHourStatic: settings.pricePerHourStatic,
+    pricePerHourDynamic: settings.pricePerHourDynamic,
+  });
 }

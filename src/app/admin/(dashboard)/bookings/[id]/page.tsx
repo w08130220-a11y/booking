@@ -14,6 +14,7 @@ interface Booking {
   customerEmail: string;
   customerPhone: string;
   numberOfPeople: number;
+  shootType: string;
   notes: string | null;
   status: string;
   cancellationReason: string | null;
@@ -152,6 +153,16 @@ export default function BookingDetailPage() {
             <div className="flex justify-between">
               <dt className="text-sm text-zinc-500">人數</dt>
               <dd className="text-sm text-zinc-900">{booking.numberOfPeople} 人</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-sm text-zinc-500">拍攝類型</dt>
+              <dd>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  booking.shootType === "dynamic" ? "bg-purple-100 text-purple-700" : "bg-blue-100 text-blue-700"
+                }`}>
+                  {booking.shootType === "dynamic" ? "🎬 動態拍攝" : "📷 平面拍攝"}
+                </span>
+              </dd>
             </div>
             {booking.notes && (
               <div>

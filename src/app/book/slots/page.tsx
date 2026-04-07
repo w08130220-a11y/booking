@@ -28,6 +28,7 @@ function BookSlotsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dateStr = searchParams.get("date");
+  const shootType = searchParams.get("type") || "static";
 
   const [slots, setSlots] = useState<Slot[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -38,9 +39,11 @@ function BookSlotsContent() {
   useEffect(() => {
     fetch("/api/admin/settings/public")
       .then((r) => r.json())
-      .then((data) => setPricePerHour(data.pricePerHour || 0))
+      .then((data) => {
+        setPricePerHour(shootType === "dynamic" ? (data.pricePerHourDynamic || 0) : (data.pricePerHourStatic || 0));
+      })
       .catch(() => {});
-  }, []);
+  }, [shootType]);
 
   useEffect(() => {
     if (!dateStr) return;
@@ -105,7 +108,7 @@ function BookSlotsContent() {
   function handleNext() {
     if (!canProceed || !range) return;
     router.push(
-      `/book/info?date=${dateStr}&startTime=${range.startTime}&endTime=${range.endTime}&hours=${selected.size}`
+      `/book/info?date=${dateStr}&startTime=${range.startTime}&endTime=${range.endTime}&hours=${selected.size}&type=${shootType}`
     );
   }
 
@@ -115,6 +118,11 @@ function BookSlotsContent() {
       <div className="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-1">
           <h2 className="text-lg font-semibold text-zinc-900">選擇時段</h2>
+          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+            shootType === "dynamic" ? "bg-purple-100 text-purple-700" : "bg-blue-100 text-blue-700"
+          }`}>
+            {shootType === "dynamic" ? "動態拍攝" : "平面拍攝"} NT${pricePerHour.toLocaleString()}/hr
+          </span>
         </div>
         <p className="text-sm text-zinc-500">{formatDate(date)}</p>
         <p className="text-sm text-amber-600 mt-1 mb-5">

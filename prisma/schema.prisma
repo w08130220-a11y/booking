@@ -58,6 +58,7 @@ model Booking {
   customerEmail String
   customerPhone String
   numberOfPeople Int     @default(1)
+  shootType     String   @default("static")   // static=平面, dynamic=動態
   notes         String?
   status        String   @default("confirmed") // confirmed, cancelled, completed, no_show
   cancellationReason String?
@@ -74,7 +75,8 @@ model Booking {
 }
 
 model StudioSettings {
-  id           String   @id @default("default")
-  pricePerHour Int      @default(500) // 每小時價格（元）
-  updatedAt    DateTime @updatedAt
+  id                   String   @id @default("default")
+  pricePerHourStatic   Int      @default(1500) // 平面拍攝每小時
+  pricePerHourDynamic  Int      @default(2500) // 動態拍攝每小時
+  updatedAt            DateTime @updatedAt
 }

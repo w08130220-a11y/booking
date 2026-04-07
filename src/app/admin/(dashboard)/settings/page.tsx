@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 
 export default function AdminSettingsPage() {
-  const [pricePerHour, setPricePerHour] = useState(500);
+  const [priceStatic, setPriceStatic] = useState(1500);
+  const [priceDynamic, setPriceDynamic] = useState(2500);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -11,7 +12,10 @@ export default function AdminSettingsPage() {
   useEffect(() => {
     fetch("/api/admin/settings")
       .then((r) => r.json())
-      .then((data) => setPricePerHour(data.pricePerHour || 500))
+      .then((data) => {
+        setPriceStatic(data.pricePerHourStatic || 1500);
+        setPriceDynamic(data.pricePerHourDynamic || 2500);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -23,7 +27,10 @@ export default function AdminSettingsPage() {
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pricePerHour }),
+        body: JSON.stringify({
+          pricePerHourStatic: priceStatic,
+          pricePerHourDynamic: priceDynamic,
+        }),
       });
       if (res.ok) {
         setMessage("儲存成功！");
@@ -51,29 +58,49 @@ export default function AdminSettingsPage() {
       <h1 className="text-2xl font-bold text-zinc-900 mb-6">價格設定</h1>
 
       <div className="bg-white border border-zinc-200 rounded-xl p-6 max-w-md">
-        <h3 className="font-semibold text-zinc-900 mb-4">場地租借費用</h3>
+        <h3 className="font-semibold text-zinc-900 mb-5">場地租借費用</h3>
 
-        <div className="mb-5">
-          <label className="block text-sm font-medium text-zinc-700 mb-1.5">
-            每小時價格（NT$）
-          </label>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-zinc-500">$</span>
-            <input
-              type="number"
-              value={pricePerHour}
-              onChange={(e) => setPricePerHour(parseInt(e.target.value) || 0)}
-              min={0}
-              className="w-40 px-3 py-2.5 border border-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <span className="text-sm text-zinc-500">/ 小時</span>
+        <div className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
+              📷 平面拍攝（NT$ / 小時）
+            </label>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-zinc-500">$</span>
+              <input
+                type="number"
+                value={priceStatic}
+                onChange={(e) => setPriceStatic(parseInt(e.target.value) || 0)}
+                min={0}
+                className="w-40 px-3 py-2.5 border border-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <span className="text-sm text-zinc-500">/ 小時</span>
+            </div>
           </div>
-          <p className="text-xs text-zinc-400 mt-2">
-            預約時系統會自動根據時數計算總金額
-          </p>
+
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
+              🎬 動態拍攝（NT$ / 小時）
+            </label>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-zinc-500">$</span>
+              <input
+                type="number"
+                value={priceDynamic}
+                onChange={(e) => setPriceDynamic(parseInt(e.target.value) || 0)}
+                min={0}
+                className="w-40 px-3 py-2.5 border border-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <span className="text-sm text-zinc-500">/ 小時</span>
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <p className="text-xs text-zinc-400 mt-4">
+          預約時系統會自動根據拍攝類型和時數計算總金額
+        </p>
+
+        <div className="flex items-center gap-3 mt-5">
           <button
             onClick={handleSave}
             disabled={saving}

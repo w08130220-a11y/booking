@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BookingStepper } from "@/components/booking/stepper";
 import { formatDate, formatTimeRange, parseDate } from "@/lib/utils";
@@ -21,6 +21,7 @@ function BookInfoContent() {
   const startTime = searchParams.get("startTime");
   const endTime = searchParams.get("endTime");
   const hours = searchParams.get("hours");
+  const shootType = searchParams.get("type") || "static";
 
   const [form, setForm] = useState({
     customerName: "",
@@ -31,12 +32,14 @@ function BookInfoContent() {
   });
   const [pricePerHour, setPricePerHour] = useState(0);
 
-  useState(() => {
+  useEffect(() => {
     fetch("/api/admin/settings/public")
       .then((r) => r.json())
-      .then((data) => setPricePerHour(data.pricePerHour || 0))
+      .then((data) => {
+        setPricePerHour(shootType === "dynamic" ? (data.pricePerHourDynamic || 0) : (data.pricePerHourStatic || 0));
+      })
       .catch(() => {});
-  });
+  }, [shootType]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -78,6 +81,7 @@ function BookInfoContent() {
           date: dateStr,
           startTime,
           endTime,
+          shootType,
           ...form,
           notes: form.notes || undefined,
         }),
@@ -115,11 +119,18 @@ function BookInfoContent() {
                 {formatTimeRange(startTime, endTime)}
                 {hours && <span className="ml-2 text-zinc-400">（共 {hours} 小時）</span>}
               </p>
-              {pricePerHour > 0 && hours && (
-                <p className="text-sm font-medium text-emerald-600 mt-0.5">
-                  費用：NT$ {(parseInt(hours) * pricePerHour).toLocaleString()}（現場付款）
-                </p>
-              )}
+              <div className="flex items-center gap-2 mt-1">
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  shootType === "dynamic" ? "bg-purple-100 text-purple-700" : "bg-blue-100 text-blue-700"
+                }`}>
+                  {shootType === "dynamic" ? "動態拍攝" : "平面拍攝"}
+                </span>
+                {pricePerHour > 0 && hours && (
+                  <span className="text-sm font-medium text-emerald-600">
+                    NT$ {(parseInt(hours) * pricePerHour).toLocaleString()}（現場付款）
+                  </span>
+                )}
+              </div>
             </div>
             <Link
               href={`/book/slots?date=${dateStr}`}

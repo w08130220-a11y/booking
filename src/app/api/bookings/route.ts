@@ -44,15 +44,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "所選時段中有部分已被預約，請重新選擇" }, { status: 409 });
   }
 
-  // Calculate price
+  // Calculate price based on shoot type
   let settings = await prisma.studioSettings.findUnique({ where: { id: "default" } });
   if (!settings) {
-    settings = await prisma.studioSettings.create({ data: { id: "default", pricePerHour: 500 } });
+    settings = await prisma.studioSettings.create({ data: { id: "default", pricePerHourStatic: 1500, pricePerHourDynamic: 2500 } });
   }
+  const shootType = data.shootType || "static";
+  const pricePerHour = shootType === "dynamic" ? settings.pricePerHourDynamic : settings.pricePerHourStatic;
   const startHour = parseInt(data.startTime.split(":")[0]);
   const endHour = parseInt(data.endTime.split(":")[0]) || 24;
   const hours = endHour - startHour;
-  const totalPrice = hours * settings.pricePerHour;
+  const totalPrice = hours * pricePerHour;
 
   try {
     const booking = await prisma.booking.create({
@@ -64,6 +66,7 @@ export async function POST(request: NextRequest) {
         customerEmail: data.customerEmail,
         customerPhone: data.customerPhone,
         numberOfPeople: data.numberOfPeople,
+        shootType,
         notes: data.notes || null,
         totalPrice,
       },
