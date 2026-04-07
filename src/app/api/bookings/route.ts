@@ -76,10 +76,13 @@ export async function POST(request: NextRequest) {
     sendBookingConfirmation({
       customerName: booking.customerName,
       customerEmail: booking.customerEmail,
+      customerPhone: booking.customerPhone,
       date: formatDate(booking.date),
       startTime: booking.startTime,
       endTime: booking.endTime,
       numberOfPeople: booking.numberOfPeople,
+      shootType: booking.shootType,
+      totalPrice: booking.totalPrice,
       notes: booking.notes,
       bookingId: booking.id,
     }).then((sent) => {
