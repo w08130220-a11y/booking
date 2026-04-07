@@ -56,7 +56,30 @@ export async function sendBookingConfirmation(data: BookingEmailData) {
 }
 
 function buildConfirmationEmail(data: BookingEmailData) {
-  const shootLabel = data.shootType === "dynamic" ? "🎬 動態拍攝" : "📷 平面拍攝";
+  const shootLabel = data.shootType === "dynamic" ? "動態拍攝" : "平面拍攝";
+  const priceStr = `NT$ ${String(data.totalPrice)}`;
+  const bookingRef = data.bookingId.slice(0, 8).toUpperCase();
+  const year = new Date().getFullYear();
+  const hasPrice = data.totalPrice > 0;
+  const hasNotes = !!data.notes;
+
+  const priceRow = hasPrice ? `<tr><td style="padding:8px 0;color:#71717a;font-size:14px;">金額</td><td style="padding:8px 0;color:#059669;font-size:16px;font-weight:700;">${priceStr}</td></tr>` : "";
+  const notesRow = hasNotes ? `<tr><td style="padding:8px 0;color:#71717a;font-size:14px;vertical-align:top;">備註</td><td style="padding:8px 0;color:#18181b;font-size:14px;">${data.notes}</td></tr>` : "";
+
+  const paymentSection = hasPrice ? `
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin-bottom:24px;">
+        <p style="color:#92400e;font-size:14px;margin:0;font-weight:600;margin-bottom:12px;">匯款資訊</p>
+        <table style="width:100%;border-collapse:collapse;">
+          <tr><td style="padding:4px 0;color:#92400e;font-size:13px;">銀行</td><td style="padding:4px 0;color:#92400e;font-size:13px;font-weight:600;">國泰世華銀行 013</td></tr>
+          <tr><td style="padding:4px 0;color:#92400e;font-size:13px;">帳號</td><td style="padding:4px 0;color:#92400e;font-size:13px;font-weight:600;">131-506-066-112</td></tr>
+          <tr><td style="padding:4px 0;color:#92400e;font-size:13px;">金額</td><td style="padding:4px 0;color:#92400e;font-size:13px;font-weight:600;">${priceStr}</td></tr>
+        </table>
+        <p style="color:#92400e;font-size:12px;margin:12px 0 0;line-height:1.6;">
+          轉帳完成後請將末五碼寄至 bubu2026studio@gmail.com<br>
+          信件主旨請填寫: 預約編號 ${bookingRef} 末五碼
+        </p>
+      </div>` : "";
+
   return `
 <!DOCTYPE html>
 <html>
@@ -75,30 +98,17 @@ function buildConfirmationEmail(data: BookingEmailData) {
       <p style="color:#18181b;font-size:15px;margin:0 0 24px;line-height:1.6;">感謝您的預約！以下是您的預約資訊，請確認內容是否正確。</p>
       <div style="background:#f4f4f5;border-radius:8px;padding:20px;margin-bottom:24px;">
         <table style="width:100%;border-collapse:collapse;">
-          <tr><td style="padding:8px 0;color:#71717a;font-size:14px;width:80px;">預約編號</td><td style="padding:8px 0;color:#18181b;font-size:14px;font-weight:500;font-family:monospace;">${data.bookingId.slice(0, 8).toUpperCase()}</td></tr>
+          <tr><td style="padding:8px 0;color:#71717a;font-size:14px;width:80px;">預約編號</td><td style="padding:8px 0;color:#18181b;font-size:14px;font-weight:500;font-family:monospace;">${bookingRef}</td></tr>
           <tr><td style="padding:8px 0;color:#71717a;font-size:14px;">日期</td><td style="padding:8px 0;color:#18181b;font-size:14px;font-weight:500;">${data.date}</td></tr>
           <tr><td style="padding:8px 0;color:#71717a;font-size:14px;">時段</td><td style="padding:8px 0;color:#18181b;font-size:14px;font-weight:500;">${data.startTime} - ${data.endTime}</td></tr>
           <tr><td style="padding:8px 0;color:#71717a;font-size:14px;">類型</td><td style="padding:8px 0;color:#18181b;font-size:14px;font-weight:500;">${shootLabel}</td></tr>
           <tr><td style="padding:8px 0;color:#71717a;font-size:14px;">人數</td><td style="padding:8px 0;color:#18181b;font-size:14px;font-weight:500;">${data.numberOfPeople} 人</td></tr>
-          ${data.totalPrice > 0 ? `<tr><td style="padding:8px 0;color:#71717a;font-size:14px;">金額</td><td style="padding:8px 0;color:#059669;font-size:16px;font-weight:700;">NT$ ${data.totalPrice.toLocaleString()}</td></tr>` : ""}
-          ${data.notes ? `<tr><td style="padding:8px 0;color:#71717a;font-size:14px;vertical-align:top;">備註</td><td style="padding:8px 0;color:#18181b;font-size:14px;">${data.notes}</td></tr>` : ""}
+          ${priceRow}
+          ${notesRow}
         </table>
       </div>
 
-      ${data.totalPrice > 0 ? `
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin-bottom:24px;">
-        <p style="color:#92400e;font-size:14px;margin:0;font-weight:600;margin-bottom:12px;">💳 匯款資訊</p>
-        <table style="width:100%;border-collapse:collapse;">
-          <tr><td style="padding:4px 0;color:#92400e;font-size:13px;">銀行</td><td style="padding:4px 0;color:#92400e;font-size:13px;font-weight:600;">國泰世華銀行（013）</td></tr>
-          <tr><td style="padding:4px 0;color:#92400e;font-size:13px;">帳號</td><td style="padding:4px 0;color:#92400e;font-size:13px;font-weight:600;">131-506-066-112</td></tr>
-          <tr><td style="padding:4px 0;color:#92400e;font-size:13px;">金額</td><td style="padding:4px 0;color:#92400e;font-size:13px;font-weight:600;">NT$ ${data.totalPrice.toLocaleString()}</td></tr>
-        </table>
-        <p style="color:#92400e;font-size:12px;margin:12px 0 0;line-height:1.6;">
-          轉帳完成後，請將<strong>末五碼</strong>寄至 <a href="mailto:bubu2026studio@gmail.com" style="color:#92400e;font-weight:600;">bubu2026studio@gmail.com</a><br>
-          信件主旨請填寫：預約編號 ${data.bookingId.slice(0, 8).toUpperCase()} — 末五碼
-        </p>
-      </div>
-      ` : ""}
+      ${paymentSection}
 
       <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:16px;margin-bottom:24px;">
         <p style="color:#92400e;font-size:13px;margin:0;font-weight:600;margin-bottom:8px;">注意事項</p>
@@ -114,7 +124,7 @@ function buildConfirmationEmail(data: BookingEmailData) {
       </div>
     </div>
     <div style="background:#f9fafb;border-top:1px solid #e4e4e7;padding:20px 32px;text-align:center;">
-      <p style="color:#a1a1aa;font-size:12px;margin:0;">${STUDIO_NAME} &copy; ${new Date().getFullYear()}</p>
+      <p style="color:#a1a1aa;font-size:12px;margin:0;">${STUDIO_NAME} ${year}</p>
       <p style="color:#d4d4d8;font-size:11px;margin:6px 0 0;">此為系統自動發送的確認信，請勿直接回覆</p>
     </div>
   </div>
