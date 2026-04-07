@@ -4,7 +4,7 @@ export default function BookLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-[#f5f0eb]">
       <header className="border-b border-zinc-200 bg-white">
         <div className="mx-auto max-w-2xl px-4 py-5">
           <h1 className="text-xl font-bold text-zinc-900">Bubu Studio</h1>
