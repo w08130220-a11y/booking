@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const STUDIO_NAME = process.env.STUDIO_NAME || "Bubu Studio";
 const STUDIO_EMAIL = process.env.STUDIO_EMAIL || "onboarding@resend.dev";
-const ADMIN_NOTIFICATION_EMAIL = "bubu2026studio@gmail.com";
+const ADMIN_NOTIFICATION_EMAIL = "yangiofficial3@gmail.com";
 
 interface BookingEmailData {
   customerName: string;
