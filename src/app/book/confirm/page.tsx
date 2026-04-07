@@ -177,12 +177,8 @@ function BookConfirmContent() {
           </div>
 
           <div className="mt-4 bg-amber-100 rounded-lg p-3">
-            <p className="text-sm text-amber-800 font-medium mb-1">轉帳完成後請回傳末五碼</p>
-            <p className="text-sm text-amber-700">
-              寄送至：<a href="mailto:bubu2026studio@gmail.com" className="font-medium underline">bubu2026studio@gmail.com</a>
-            </p>
-            <p className="text-xs text-amber-600 mt-1">
-              信件主旨請填寫：預約編號 {booking.id.slice(0, 8)} — 末五碼
+            <p className="text-sm text-amber-800">
+              如有任何問題，請來信：<a href="mailto:bubu2026studio@gmail.com" className="font-medium underline">bubu2026studio@gmail.com</a>
             </p>
           </div>
         </div>

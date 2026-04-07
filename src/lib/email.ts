@@ -88,8 +88,7 @@ function buildConfirmationEmail(data: BookingEmailData) {
           <tr><td style="padding:4px 0;color:#92400e;font-size:13px;">金額</td><td style="padding:4px 0;color:#92400e;font-size:13px;font-weight:600;">${priceStr}</td></tr>
         </table>
         <p style="color:#92400e;font-size:12px;margin:12px 0 0;line-height:1.6;">
-          轉帳完成後請將末五碼寄至 bubu2026studio@gmail.com<br>
-          信件主旨請填寫: 預約編號 ${bookingRef} 末五碼
+          如有任何問題請來信: bubu2026studio@gmail.com
         </p>
       </div>` : "";
 

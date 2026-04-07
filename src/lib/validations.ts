@@ -9,6 +9,7 @@ export const bookingCreateSchema = z.object({
   customerPhone: z.string().min(8, "請輸入有效的手機號碼").max(20, "手機號碼過長"),
   numberOfPeople: z.number().int().min(1, "至少 1 人").max(20, "最多 20 人").default(1),
   shootType: z.enum(["static", "dynamic"]).default("static"),
+  lastFiveDigits: z.string().regex(/^\d{5}$/, "請輸入正確的轉帳末五碼"),
   notes: z.string().max(500, "備註過長").optional(),
 });
 

@@ -28,6 +28,7 @@ function BookInfoContent() {
     customerEmail: "",
     customerPhone: "",
     numberOfPeople: 1,
+    lastFiveDigits: "",
     notes: "",
   });
   const [pricePerHour, setPricePerHour] = useState(0);
@@ -61,6 +62,8 @@ function BookInfoContent() {
     else if (form.customerPhone.replace(/\D/g, "").length < 8)
       errs.customerPhone = "請輸入有效的手機號碼";
     if (form.numberOfPeople < 1) errs.numberOfPeople = "至少 1 人";
+    if (!form.lastFiveDigits.trim()) errs.lastFiveDigits = "請輸入轉帳末五碼";
+    else if (!/^\d{5}$/.test(form.lastFiveDigits.trim())) errs.lastFiveDigits = "請輸入正確的 5 位數字";
     return errs;
   }
 
@@ -226,6 +229,24 @@ function BookInfoContent() {
               </button>
               <span className="text-sm text-zinc-400">人</span>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 mb-1.5">
+              轉帳末五碼 <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={form.lastFiveDigits}
+              onChange={(e) => updateField("lastFiveDigits", e.target.value.replace(/\D/g, "").slice(0, 5))}
+              placeholder="請輸入轉帳帳號末五碼"
+              maxLength={5}
+              className="w-full px-3 py-2.5 border border-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            {errors.lastFiveDigits && (
+              <p className="text-xs text-red-500 mt-1">{errors.lastFiveDigits}</p>
+            )}
+            <p className="text-xs text-zinc-400 mt-1">請先完成匯款，再填入帳號末五碼以完成預約</p>
           </div>
 
           <div>

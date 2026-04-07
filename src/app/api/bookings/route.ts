@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
         customerPhone: data.customerPhone,
         numberOfPeople: data.numberOfPeople,
         shootType,
-        notes: data.notes || null,
+        notes: data.notes ? `[末五碼: ${data.lastFiveDigits}] ${data.notes}` : `[末五碼: ${data.lastFiveDigits}]`,
         totalPrice,
       },
     });
