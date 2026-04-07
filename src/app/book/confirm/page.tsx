@@ -134,8 +134,7 @@ function BookConfirmContent() {
       {/* Payment info */}
       {booking.totalPrice > 0 && (
         <div className="bg-amber-50 rounded-xl border border-amber-200 p-5 shadow-sm mb-6">
-          <h3 className="font-semibold text-amber-900 mb-1">💳 匯款資訊</h3>
-          <p className="text-sm text-amber-700 mb-4">請於預約日前完成轉帳，並將末五碼回傳至指定信箱。</p>
+          <h3 className="font-semibold text-amber-900 mb-4">💳 匯款資訊</h3>
 
           <div className="bg-white rounded-lg p-4 space-y-3">
             <div className="flex items-center justify-between">
